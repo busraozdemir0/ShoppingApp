@@ -6,6 +6,9 @@ const cartTotal = document.querySelector(".total-value");
 const cartContent = document.querySelector(".cart-list");
 const productsDOM = document.querySelector("#products-dom");
 
+let cart=[];
+let buttonsDOM=[];
+
 class Products {
     async getProducts() {  // js'de her şey eşzamanlı çalıştığı için async dersek burada bir şeyler sırayla gerçekleşeceği anlamına geliyor
         try {
@@ -44,6 +47,26 @@ class UI {
         });
         productsDOM.innerHTML=result; // yukarıdaki html kodlarını DOM içerisine yani index sayfasına entegre edeceğiz
     }
+
+    getBagButtons(){
+        const buttons=[...document.querySelectorAll(".btn-add-to-cart")]  // .btn-add-to-cart classına sahip tüm elementleri dizi şeklinde al
+        buttonsDOM=buttons;
+        buttons.forEach(button=>{
+            let id=button.dataset.id;  // api ile gelen ürünlerin id'leri
+            let inCart=cart.find(item=>item.id===id);
+            if(inCart){
+                button.setAttribute("disabled","disabled");
+                button.opacity=".3";
+            }else{
+                button.addEventListener("click",event=>{  // butona bir kere tıklandıktan sonra daha tıklanamaması için 
+                    event.target.disabled=true;  
+                    event.target.style.opacity=".3";
+                    // get product from products
+                });
+            }
+        });
+    }
+
 }
 
 class Storage {
@@ -55,7 +78,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const ui = new UI();
     const products = new Products();
 
-    products.getProducts().then(products => {
-        ui.displayProducts(products);
-    });
+    products.getProducts().then(products => {  // önce ürünler gelsin ve sonrasında(then) listelensin en son da butonları alma işlemi gelsin
+        ui.displayProducts(products)
+    }).then(()=>{
+        ui.getBagButtons();
+    })
 });
