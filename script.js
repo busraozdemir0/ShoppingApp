@@ -136,7 +136,7 @@ class UI {
         cartBtn.click();
     }
 
-    setupAPP() {
+    setupAPP() {  // sepete ürün eklediğimizde bunu locale'de kaydeder(yani sayfa tekrar yüklendiğinde ürünler kaybolmaz)
         cart = Storage.getCart();
         this.saveCartValues(cart);
         this.populateCart(cart);  // sayfayı yenilesek bile sepete eklediğimiz ürünleri storage'den alarak listeler
